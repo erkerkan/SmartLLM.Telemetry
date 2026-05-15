@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>SmartLLM.Telemetry.Tokenizer</RootNamespace>
+    <AssemblyName>SmartLLM.Telemetry.Tokenizer</AssemblyName>
+    <Description>Offline token counting and cost estimation for SmartLLM.Telemetry.</Description>
+    <PackageId>SmartLLM.Telemetry.Tokenizer</PackageId>
+    <PackageTags>llm;tokens;tiktoken;cost</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartLLM.Telemetry.Core\SmartLLM.Telemetry.Core.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

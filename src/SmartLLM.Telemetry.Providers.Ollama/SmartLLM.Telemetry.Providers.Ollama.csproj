@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>SmartLLM.Telemetry.Providers.Ollama</RootNamespace>
+    <AssemblyName>SmartLLM.Telemetry.Providers.Ollama</AssemblyName>
+    <Description>Ollama provider adapter for SmartLLM.Telemetry (Phase 1 stub).</Description>
+    <PackageId>SmartLLM.Telemetry.Providers.Ollama</PackageId>
+    <PackageTags>llm;ollama;telemetry</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartLLM.Telemetry.Core\SmartLLM.Telemetry.Core.csproj" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

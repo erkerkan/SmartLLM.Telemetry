@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>SmartLLM.Telemetry.Providers.OpenAI</RootNamespace>
+    <AssemblyName>SmartLLM.Telemetry.Providers.OpenAI</AssemblyName>
+    <Description>OpenAI provider adapter and instrumentation for SmartLLM.Telemetry.</Description>
+    <PackageId>SmartLLM.Telemetry.Providers.OpenAI</PackageId>
+    <PackageTags>llm;openai;telemetry</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartLLM.Telemetry.Core\SmartLLM.Telemetry.Core.csproj" />
+    <ProjectReference Include="..\SmartLLM.Telemetry.OpenTelemetry\SmartLLM.Telemetry.OpenTelemetry.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

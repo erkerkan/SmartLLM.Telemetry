@@ -1,0 +1,22 @@
+## .NET
+bin/
+obj/
+artifacts/
+*.user
+*.suo
+.vs/
+TestResults/
+*.nupkg
+*.snupkg
+
+## IDE
+.idea/
+*.DotSettings.user
+
+## OS
+Thumbs.db
+.DS_Store
+
+## Local config
+appsettings.*.local.json
+secrets.json

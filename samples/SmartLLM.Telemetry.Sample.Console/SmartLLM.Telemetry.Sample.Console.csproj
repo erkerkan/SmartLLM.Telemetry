@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SmartLLM.Telemetry.Sample.Console</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SmartLLM.Telemetry.Core\SmartLLM.Telemetry.Core.csproj" />
+    <ProjectReference Include="..\..\src\SmartLLM.Telemetry.OpenTelemetry\SmartLLM.Telemetry.OpenTelemetry.csproj" />
+    <ProjectReference Include="..\..\src\SmartLLM.Telemetry.Tokenizer\SmartLLM.Telemetry.Tokenizer.csproj" />
+    <ProjectReference Include="..\..\src\SmartLLM.Telemetry.Providers.OpenAI\SmartLLM.Telemetry.Providers.OpenAI.csproj" />
+    <ProjectReference Include="..\..\src\SmartLLM.Telemetry.Security\SmartLLM.Telemetry.Security.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>SmartLLM.Telemetry.Caching.Semantic</RootNamespace>
+    <AssemblyName>SmartLLM.Telemetry.Caching.Semantic</AssemblyName>
+    <Description>Semantic cache middleware for SmartLLM.Telemetry (Phase 2 stub).</Description>
+    <PackageId>SmartLLM.Telemetry.Caching.Semantic</PackageId>
+    <PackageTags>llm;cache;semantic;vector</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartLLM.Telemetry.Core\SmartLLM.Telemetry.Core.csproj" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

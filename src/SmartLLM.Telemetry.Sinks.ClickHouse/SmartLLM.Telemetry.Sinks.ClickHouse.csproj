@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>SmartLLM.Telemetry.Sinks.ClickHouse</RootNamespace>
+    <AssemblyName>SmartLLM.Telemetry.Sinks.ClickHouse</AssemblyName>
+    <Description>ClickHouse telemetry sink for SmartLLM.Telemetry.</Description>
+    <PackageId>SmartLLM.Telemetry.Sinks.ClickHouse</PackageId>
+    <PackageTags>llm;clickhouse;telemetry;sink</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartLLM.Telemetry.Core\SmartLLM.Telemetry.Core.csproj" />
+    <ProjectReference Include="..\SmartLLM.Telemetry.OpenTelemetry\SmartLLM.Telemetry.OpenTelemetry.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema\**\*.sql" Pack="true" PackagePath="contentFiles\any\any\Schema\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

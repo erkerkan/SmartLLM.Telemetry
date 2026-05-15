@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>SmartLLM.Telemetry.Security</RootNamespace>
+    <AssemblyName>SmartLLM.Telemetry.Security</AssemblyName>
+    <Description>PII redaction and security interceptors for SmartLLM.Telemetry.</Description>
+    <PackageId>SmartLLM.Telemetry.Security</PackageId>
+    <PackageTags>llm;security;pii;redaction</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartLLM.Telemetry.Core\SmartLLM.Telemetry.Core.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+</Project>
