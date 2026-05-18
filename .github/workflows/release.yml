@@ -31,6 +31,9 @@ jobs:
       - name: Pack
         run: dotnet pack SmartLLM.Telemetry.sln -c Release --no-build -o ./artifacts
 
-      - name: Push to NuGet
-        run: dotnet nuget push "./artifacts/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        if: ${{ secrets.NUGET_API_KEY != '' }}
+      - name: Push packages to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          dotnet nuget push "./artifacts/*.nupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          dotnet nuget push "./artifacts/*.snupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
