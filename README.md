@@ -1,25 +1,30 @@
 # SmartLLM.Telemetry
 
-OpenTelemetry-native **observability SDK for .NET 8 LLM chat workloads**: traces, optional metrics, estimated token/cost tags, and an optional ClickHouse sink.
+OpenTelemetry-native **observability SDK for .NET 8 LLM workloads** (chat, tools, embeddings): traces, optional metrics, estimated token/cost tags, and an optional ClickHouse sink.
 
-## What this library does (v1.0)
+**Current release:** [1.2.x](CHANGELOG.md) · NuGet: [SmartLLM.Telemetry.Core](https://www.nuget.org/packages/SmartLLM.Telemetry.Core)
+
+## What this library does (v1.2)
 
 - Instruments **chat completions** via `ILlmClient` or `Microsoft.Extensions.AI` `IChatClient` (including streaming).
-- Emits **OpenTelemetry traces** (`smartllm.chat`) with model, tokens, latency, status, and optional estimated USD cost.
+- Records **tool / function-call** telemetry: child spans `smartllm.tool`, events `smartllm.tool_call` / `smartllm.tool_result` (optional capture of arguments/results).
+- Instruments **embeddings** via `IEmbeddingClient`, OpenAI provider (`AddSmartLLMOpenAIEmbeddings()`), and `InstrumentedEmbeddingGenerator` for `IEmbeddingGenerator`.
+- Emits **OpenTelemetry traces** (`smartllm.chat`, `smartllm.embeddings`) with model, tokens, latency, status, and optional estimated USD cost.
+- Emits optional **metrics** (`smartllm.requests`, `smartllm.tokens`, `smartllm.latency.ms`, `smartllm.cost.usd`) via `AddSmartLLMTracing()`.
 - Ships **provider packages** for **OpenAI**, **Azure OpenAI**, **Ollama**, and **LM Studio** (OpenAI-compatible local server).
 - **Estimates** tokens (Tiktoken/heuristic) and cost (static pricing table) when the provider does not return usage.
-- Optionally **exports** to **ClickHouse** (`traces`, and conditionally `logs` / `costs`).
+- Optionally **exports** to **ClickHouse** (`traces`; `logs` when prompt/completion capture is on; `costs` when estimated cost > 0, or always with `ExportZeroCostRows`).
 - **Redacts** common PII (email, etc.) on ClickHouse log/attribute export when `AddSmartLLMSecurity()` is registered.
-- Exports traces/metrics to **console or OTLP** via `AddSmartLLMTracing()`.
+- Exports traces/metrics to **console or OTLP** for Grafana, Jaeger, or an OpenTelemetry Collector.
 
-## What this library does not do (v1.0)
+## What this library does not do (v1.2)
 
-- No hosted dashboard, quota enforcement, or billing integration.
-- No semantic / vector cache (package exists as a no-op placeholder).
-- No dedicated Semantic Kernel package (use your existing `IChatClient` from SK with `InstrumentedChatClient`).
-- No guaranteed exact token counts for every local model.
-- Embeddings require OpenAI API key today (other providers: use your own `IEmbeddingClient`).
-- `costs` in ClickHouse are written only when estimated cost is **> 0** (local models usually produce **no** `costs` row).
+- No **hosted dashboard**, **quota enforcement**, or **billing integration** — bring your own UI (Grafana, ClickHouse SQL, etc.).
+- No **semantic / vector cache** ( `SmartLLM.Telemetry.Caching.Semantic` is a placeholder only).
+- No dedicated **Semantic Kernel** package (use your existing `IChatClient` from SK with `InstrumentedChatClient`).
+- No **guaranteed exact token counts** for every local model (offline estimates are used when usage is missing).
+- No **embeddings for all providers** out of the box (OpenAI built-in; implement `IEmbeddingClient` for others).
+- **PII redaction** is regex-based on export paths — not a full enterprise DLP suite.
 
 ## Features
 
@@ -30,20 +35,21 @@ OpenTelemetry-native **observability SDK for .NET 8 LLM chat workloads**: traces
 - **Security** — Regex PII redaction on ClickHouse export paths (not a full DLP suite).
 - **Stubs for demos** — OpenAI/Azure/Ollama can fall back to stub clients when credentials or Ollama are unavailable (LM Studio does not stub).
 
-## Capability matrix (v1.0)
+## Capability matrix (v1.2)
 
 | Capability | Status |
 |------------|--------|
 | Chat `ILlmClient` + `IChatClient` tracing | Yes |
 | Streaming | Yes |
+| Tool / function-call spans + events | Yes |
+| Embeddings (`IEmbeddingClient` + OpenAI provider) | Yes |
+| `IEmbeddingGenerator` wrapper | Yes |
 | OpenAI / Azure / Ollama / LM Studio | Yes |
-| ClickHouse `traces` / `logs` / `costs` | Yes |
+| ClickHouse `traces` / `logs` / `costs` | Yes (see [ClickHouse](docker/clickhouse/README.md)) |
 | PII redaction on ClickHouse export | Yes (with `AddSmartLLMSecurity`) |
 | OTLP + console export | Yes |
 | OTel metrics (`smartllm.*`) | Yes |
-| Tool/function spans | Yes (`smartllm.tool` child spans + events) |
-| Embeddings (`IEmbeddingClient` + OpenAI) | Yes |
-| `IEmbeddingGenerator` wrapper | Yes |
+| Offline token + cost estimates | Yes (when provider omits usage) |
 | Semantic cache | Placeholder only |
 | Budget / quota enforcement | No |
 | Built-in dashboard | No |
@@ -55,12 +61,12 @@ OpenTelemetry-native **observability SDK for .NET 8 LLM chat workloads**: traces
 | `SmartLLM.Telemetry.Core` | `ILlmClient`, interceptor pipeline, domain models |
 | `SmartLLM.Telemetry.OpenTelemetry` | Activity instrumentation and exporters |
 | `SmartLLM.Telemetry.Tokenizer` | Offline token counting and cost estimation |
-| `SmartLLM.Telemetry.Providers.OpenAI` | OpenAI / compatible API instrumentation |
+| `SmartLLM.Telemetry.Providers.OpenAI` | OpenAI chat + embeddings / compatible API |
 | `SmartLLM.Telemetry.Providers.AzureOpenAI` | Azure OpenAI (real `IChatClient` + `ILlmClient`) |
 | `SmartLLM.Telemetry.Providers.Ollama` | Ollama HTTP API + instrumented `ILlmClient` |
 | `SmartLLM.Telemetry.Sinks.ClickHouse` | ClickHouse batch writer |
 | `SmartLLM.Telemetry.Security` | PII masking interceptors |
-| `SmartLLM.Telemetry.Caching.Semantic` | Placeholder only (no cache logic in v1.0) |
+| `SmartLLM.Telemetry.Caching.Semantic` | Placeholder only (no cache logic shipped yet) |
 | `SmartLLM.Telemetry.Extensions.AI` | `Microsoft.Extensions.AI` `IChatClient` instrumentation |
 
 ## Quick start
@@ -299,7 +305,7 @@ Prefer `AddSmartLLMTracing()` (see sample) for console and/or OTLP plus metrics.
 ## Documentation
 
 - [CHANGELOG](CHANGELOG.md) — version history
-- [API stability](docs/release/api-stability.md) — what is stable in 1.0.x
+- [API stability](docs/release/api-stability.md) — what is stable in 1.x
 - [Semantic conventions](docs/telemetry/semantic-conventions.md) — `smartllm.*` tags and provider matrix
 - [ClickHouse schema & Docker](docker/clickhouse/README.md)
 - [ClickHouse migrations](docs/storage/clickhouse-migrations.md)
