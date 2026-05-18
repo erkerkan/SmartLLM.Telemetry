@@ -9,8 +9,8 @@
 What you get:
 - LLM chat tracing (`smartllm.*` spans) with model, tokens, latency, and estimated cost
 - Providers: **OpenAI**, **Azure OpenAI**, **Ollama**, **LM Studio**
-- **ClickHouse** sink for traces, logs, and cost analytics
-- **PII redaction** on export paths
+- **ClickHouse** sink for traces (optional prompt logs and cost rows when applicable)
+- **PII redaction** on ClickHouse export (regex-based)
 - **OTLP** + metrics for your existing Grafana / Jaeger / Collector stack
 
 Built on **.NET 8**, **Microsoft.Extensions.AI**, and **OpenTelemetry**.

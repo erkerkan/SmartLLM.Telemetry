@@ -1,17 +1,33 @@
 # SmartLLM.Telemetry
 
-High-performance, OpenTelemetry-native observability and cost management SDK for .NET AI workloads.
+OpenTelemetry-native **observability SDK for .NET 8 LLM chat workloads**: traces, optional metrics, estimated token/cost tags, and an optional ClickHouse sink.
+
+## What this library does (v1.0)
+
+- Instruments **chat completions** via `ILlmClient` or `Microsoft.Extensions.AI` `IChatClient` (including streaming).
+- Emits **OpenTelemetry traces** (`smartllm.chat`) with model, tokens, latency, status, and optional estimated USD cost.
+- Ships **provider packages** for **OpenAI**, **Azure OpenAI**, **Ollama**, and **LM Studio** (OpenAI-compatible local server).
+- **Estimates** tokens (Tiktoken/heuristic) and cost (static pricing table) when the provider does not return usage.
+- Optionally **exports** to **ClickHouse** (`traces`, and conditionally `logs` / `costs`).
+- **Redacts** common PII (email, etc.) on ClickHouse log/attribute export when `AddSmartLLMSecurity()` is registered.
+- Exports traces/metrics to **console or OTLP** via `AddSmartLLMTracing()`.
+
+## What this library does not do (v1.0)
+
+- No hosted dashboard, quota enforcement, or billing integration.
+- No semantic / vector cache (package exists as a no-op placeholder).
+- No dedicated Semantic Kernel package (use your existing `IChatClient` from SK with `InstrumentedChatClient`).
+- No tool/function-call spans, embeddings API, or guaranteed exact token counts for every local model.
+- `costs` in ClickHouse are written only when estimated cost is **> 0** (local models usually produce **no** `costs` row).
 
 ## Features
 
-- **Provider-agnostic interception** — Works with `Microsoft.Extensions.AI` and Semantic Kernel pipelines (OpenAI, Azure OpenAI, Ollama, and more).
-- **OpenTelemetry instrumentation** — Standard `ActivitySource` spans with LLM semantic conventions (model, tokens, latency, status).
-- **Offline token & cost engine** — Provider-independent token estimation and approximate cost calculation.
-- **ClickHouse sink** — Batched traces, logs, and costs with retry, attribute export, and Docker compose for local dev.
-- **OpenAI / M.E.AI** — Real `IChatClient` wiring via `Microsoft.Extensions.AI.OpenAI` plus instrumented `ILlmClient`.
-- **Security** — PII redaction before export.
-- **OTLP & metrics** — `AddSmartLLMTracing()` for Collector/Grafana (v1.0).
-- **Semantic cache** — Vector similarity cache (Phase 2 / not in 1.0).
+- **Chat instrumentation** — `ILlmClient` pipeline + `IChatClient` wrapper (`SmartLLM.Telemetry.Extensions.AI`).
+- **Providers** — OpenAI, Azure OpenAI, Ollama (HTTP), LM Studio (via OpenAI-compatible endpoint).
+- **OpenTelemetry** — `ActivitySource` spans; optional metrics (`smartllm.requests`, `smartllm.tokens`, `smartllm.latency.ms`, `smartllm.cost.usd`).
+- **ClickHouse sink** — Batched HTTP JSONEachRow insert with retry (local Docker compose included).
+- **Security** — Regex PII redaction on ClickHouse export paths (not a full DLP suite).
+- **Stubs for demos** — OpenAI/Azure/Ollama can fall back to stub clients when credentials or Ollama are unavailable (LM Studio does not stub).
 
 ## Capability matrix (v1.0)
 
@@ -42,7 +58,7 @@ High-performance, OpenTelemetry-native observability and cost management SDK for
 | `SmartLLM.Telemetry.Providers.Ollama` | Ollama HTTP API + instrumented `ILlmClient` |
 | `SmartLLM.Telemetry.Sinks.ClickHouse` | ClickHouse batch writer |
 | `SmartLLM.Telemetry.Security` | PII masking interceptors |
-| `SmartLLM.Telemetry.Caching.Semantic` | Semantic cache middleware (Phase 2) |
+| `SmartLLM.Telemetry.Caching.Semantic` | Placeholder only (no cache logic in v1.0) |
 | `SmartLLM.Telemetry.Extensions.AI` | `Microsoft.Extensions.AI` `IChatClient` instrumentation |
 
 ## Quick start
@@ -65,6 +81,7 @@ using Microsoft.Extensions.Hosting;
 using SmartLLM.Telemetry.Core;
 using SmartLLM.Telemetry.OpenTelemetry;
 using SmartLLM.Telemetry.Providers.OpenAI;
+using SmartLLM.Telemetry.Security;
 using SmartLLM.Telemetry.Tokenizer;
 
 var host = Host.CreateDefaultBuilder()
@@ -73,10 +90,16 @@ var host = Host.CreateDefaultBuilder()
         services.AddSmartLLMTelemetry(o =>
         {
             o.ServiceName = "my-ai-app";
-            o.CapturePrompts = false; // recommended in production
+            o.CapturePrompts = false;      // required false in production unless you need prompt logs
+            o.CaptureCompletions = false;
         });
         services.AddSmartLLMTokenizer();
-        services.AddConsoleTraceExporter();
+        services.AddSmartLLMSecurity();
+        services.AddSmartLLMTracing(o =>
+        {
+            o.UseConsoleExporter = true;   // or o.UseOtlpExporter = true for a Collector
+            o.EnableMetrics = true;
+        });
         services.AddSmartLLMOpenAI();
     })
     .Build();
@@ -99,7 +122,7 @@ The sample sends one chat request, prints OpenTelemetry activity tags, and (when
 | `SMARTLLM_CLICKHOUSE` | Full connection string (enables sink). **Do not commit credentials.** |
 | `SMARTLLM_CLICKHOUSE_HOST` | Alternative: build connection from host/port/user/password env vars |
 | `SMARTLLM_OTLP` | `true` → OTLP exporter instead of console |
-| `SMARTLLM_CAPTURE_PROMPTS` | `true` to export prompt/completion text into ClickHouse `logs` |
+| `SMARTLLM_CAPTURE_PROMPTS` | `true` to capture prompt text (activity events → ClickHouse `logs` when sink enabled) |
 | `OPENAI_API_KEY` / `OPENAI_MODEL` / `OPENAI_ENDPOINT` | OpenAI or compatible API |
 | `AZURE_OPENAI_*` | Azure OpenAI endpoint, key, deployment |
 | `OLLAMA_HOST` / `OLLAMA_MODEL` | Ollama base URL and model name |
@@ -212,8 +235,8 @@ Inserted 1 row(s) into smartllm_telemetry.traces
 
 Notes:
 
-- `cost=` / empty **Cost USD** is normal for local models (no pricing entry).
-- Activity tag `smartllm.provider` may show `openai` because LM Studio speaks the OpenAI API; the sample still prints `Provider: lmstudio`.
+- `cost=` / empty **Cost USD** is normal for local models (zero-cost pricing bucket).
+- Activity tag `smartllm.provider` is `lmstudio` when using the LM Studio sample path.
 
 ### Streaming
 
@@ -246,7 +269,10 @@ ORDER BY event_time DESC
 LIMIT 5;
 ```
 
-After a successful run you should see your model name, token counts, and `status = ok` in `traces`. `logs` only appear when `SMARTLLM_CAPTURE_PROMPTS=true`. `costs` is populated mainly for cloud models with known pricing.
+After a successful run you should see your model name, token counts, and `status = ok` in `traces`.
+
+- **`logs`** — only if prompt/completion capture is enabled (`SMARTLLM_CAPTURE_PROMPTS=true` and/or `CaptureCompletions=true` in code).
+- **`costs`** — only when `smartllm.estimated_cost_usd` is greater than zero (typical for cloud models in the pricing table, not Ollama/LM Studio).
 
 ### OTLP (OpenTelemetry Collector)
 
@@ -270,19 +296,23 @@ Prefer `AddSmartLLMTracing()` (see sample) for console and/or OTLP plus metrics.
 
 ## Documentation
 
-- [Product roadmap](docs/product/roadmap.md)
-- [v1.0 release runbook](docs/release/v1.0-release-runbook.md) — test before push/NuGet
-- [v1.0 scope](docs/product/v1.0-backlog.md)
-- [LinkedIn draft](docs/release/announcement-linkedin.md)
-- [CHANGELOG](CHANGELOG.md)
-- [API stability](docs/release/api-stability.md)
+- [CHANGELOG](CHANGELOG.md) — version history
+- [API stability](docs/release/api-stability.md) — what is stable in 1.0.x
+- [Semantic conventions](docs/telemetry/semantic-conventions.md) — `smartllm.*` tags and provider matrix
+- [ClickHouse schema & Docker](docker/clickhouse/README.md)
 - [ClickHouse migrations](docs/storage/clickhouse-migrations.md)
-- [System design](docs/architecture/system-design.md)
-- [Package boundaries](docs/architecture/package-boundaries.md)
-- [Semantic conventions](docs/telemetry/semantic-conventions.md)
 - [PII redaction policy](docs/security/pii-redaction-policy.md)
+- [Product roadmap](docs/product/roadmap.md)
+
+<details>
+<summary>Maintainer / release docs</summary>
+
+- [v1.0 release runbook](docs/release/v1.0-release-runbook.md)
+- [v1.0 scope](docs/product/v1.0-backlog.md)
 - [Versioning & NuGet](docs/release/versioning-and-nuget.md)
-- [Sprint 001 — Foundation](docs/sprints/sprint-001-foundation.md)
+- [Architecture notes](docs/architecture/system-design.md) (may describe future components)
+
+</details>
 
 ## Requirements
 
