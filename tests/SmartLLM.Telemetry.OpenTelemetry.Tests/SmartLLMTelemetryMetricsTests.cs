@@ -6,6 +6,8 @@ namespace SmartLLM.Telemetry.OpenTelemetry.Tests;
 
 public sealed class SmartLLMTelemetryMetricsTests
 {
+    private const string TestProvider = "metrics-test";
+
     [Fact]
     public void RecordChatCompletion_emits_measurements()
     {
@@ -23,8 +25,13 @@ public sealed class SmartLLMTelemetryMetricsTests
             }
         };
 
-        listener.SetMeasurementEventCallback<long>((instrument, measurement, _, _) =>
+        listener.SetMeasurementEventCallback<long>((instrument, measurement, tags, _) =>
         {
+            if (!HasTag(tags, "provider", TestProvider))
+            {
+                return;
+            }
+
             if (instrument.Name == "smartllm.requests")
             {
                 requests += measurement;
@@ -38,7 +45,7 @@ public sealed class SmartLLMTelemetryMetricsTests
         listener.Start();
 
         SmartLLMTelemetryMetrics.RecordChatCompletion(
-            "openai",
+            TestProvider,
             "gpt-4o-mini",
             "ok",
             promptTokens: 5,
@@ -48,5 +55,21 @@ public sealed class SmartLLMTelemetryMetricsTests
 
         Assert.Equal(1, requests);
         Assert.Equal(15, tokens);
+    }
+
+    private static bool HasTag(
+        ReadOnlySpan<KeyValuePair<string, object?>> tags,
+        string key,
+        string expected)
+    {
+        foreach (var tag in tags)
+        {
+            if (tag.Key == key && string.Equals(tag.Value as string, expected, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
