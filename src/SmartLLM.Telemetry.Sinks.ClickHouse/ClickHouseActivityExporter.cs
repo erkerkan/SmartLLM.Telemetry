@@ -59,7 +59,7 @@ public sealed class ClickHouseActivityExporter : IDisposable
                 await _sink.EnqueueLogAsync(log).ConfigureAwait(false);
             }
 
-            var cost = ClickHouseActivityMapper.MapCost(activity, _options);
+            var cost = ClickHouseActivityMapper.MapCost(activity, _options, _sinkOptions);
             if (cost is not null)
             {
                 await _sink.EnqueueCostAsync(cost).ConfigureAwait(false);

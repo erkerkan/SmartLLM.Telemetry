@@ -17,7 +17,8 @@ OpenTelemetry-native **observability SDK for .NET 8 LLM chat workloads**: traces
 - No hosted dashboard, quota enforcement, or billing integration.
 - No semantic / vector cache (package exists as a no-op placeholder).
 - No dedicated Semantic Kernel package (use your existing `IChatClient` from SK with `InstrumentedChatClient`).
-- No tool/function-call spans, embeddings API, or guaranteed exact token counts for every local model.
+- No guaranteed exact token counts for every local model.
+- Embeddings require OpenAI API key today (other providers: use your own `IEmbeddingClient`).
 - `costs` in ClickHouse are written only when estimated cost is **> 0** (local models usually produce **no** `costs` row).
 
 ## Features
@@ -40,8 +41,9 @@ OpenTelemetry-native **observability SDK for .NET 8 LLM chat workloads**: traces
 | PII redaction on ClickHouse export | Yes (with `AddSmartLLMSecurity`) |
 | OTLP + console export | Yes |
 | OTel metrics (`smartllm.*`) | Yes |
-| Tool/function spans | No |
-| Embeddings API | No |
+| Tool/function spans | Yes (`smartllm.tool` child spans + events) |
+| Embeddings (`IEmbeddingClient` + OpenAI) | Yes |
+| `IEmbeddingGenerator` wrapper | Yes |
 | Semantic cache | Placeholder only |
 | Budget / quota enforcement | No |
 | Built-in dashboard | No |

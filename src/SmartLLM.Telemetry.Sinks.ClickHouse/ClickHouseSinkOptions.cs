@@ -13,9 +13,13 @@ public sealed class ClickHouseSinkOptions
 
     public TimeSpan FlushInterval { get; set; } = TimeSpan.FromSeconds(1);
 
-    /// <summary>Maximum insert attempts per batch (including the first try).</summary>
     /// <summary>When true and <see cref="Core.IContentRedactor"/> is registered, redact log messages and custom attributes.</summary>
     public bool RedactExportedContent { get; set; } = true;
+
+    /// <summary>When true, write <c>costs</c> rows even when estimated cost is zero (tokens must be &gt; 0).</summary>
+    public bool ExportZeroCostRows { get; set; }
+
+    /// <summary>Maximum insert attempts per batch (including the first try).</summary>
 
     public int MaxRetryAttempts { get; set; } = 3;
 

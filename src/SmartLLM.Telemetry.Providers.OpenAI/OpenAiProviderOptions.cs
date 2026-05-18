@@ -11,6 +11,9 @@ public sealed class OpenAiProviderOptions
     /// <summary>Model id (e.g. gpt-4o-mini).</summary>
     public string Model { get; set; } = "gpt-4o-mini";
 
+    /// <summary>Default embedding model (e.g. text-embedding-3-small).</summary>
+    public string EmbeddingModel { get; set; } = "text-embedding-3-small";
+
     /// <summary>Optional custom endpoint for OpenAI-compatible APIs.</summary>
     public Uri? Endpoint { get; set; }
 

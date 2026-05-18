@@ -1,4 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <InternalsVisibleTo Include="SmartLLM.Telemetry.Extensions.AI.Tests" />
+  </ItemGroup>
   <PropertyGroup>
     <RootNamespace>SmartLLM.Telemetry.Extensions.AI</RootNamespace>
     <AssemblyName>SmartLLM.Telemetry.Extensions.AI</AssemblyName>

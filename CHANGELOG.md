@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented here.
 
+## [1.2.0] - 2026-05-18
+
+### Added (v1.1 scope)
+
+- Tool/function-call telemetry: child spans `smartllm.tool`, events `smartllm.tool_call` / `smartllm.tool_result`
+- Tags `smartllm.tool_call_count`, `smartllm.tool_result_count`, operation `chat_with_tools`
+- ClickHouse `ExportZeroCostRows` option and expanded embedding model pricing
+- ClickHouse query pack: `docker/clickhouse/queries/README.md`
+
+### Added (v1.2 scope)
+
+- `IEmbeddingClient`, `InstrumentedEmbeddingClient`, `AddSmartLLMOpenAIEmbeddings()`
+- `InstrumentedEmbeddingGenerator` for `IEmbeddingGenerator<string, Embedding>`
+- Embedding metrics (`smartllm.embedding.inputs`)
+- Sample: `SMARTLLM_EMBED=true` smoke path
+
 ## [1.0.0] - 2026-05-18
 
 ### Added

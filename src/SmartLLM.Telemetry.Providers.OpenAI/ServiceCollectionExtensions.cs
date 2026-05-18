@@ -35,6 +35,22 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>Registers instrumented OpenAI <see cref="IEmbeddingClient"/>.</summary>
+    public static IServiceCollection AddSmartLLMOpenAIEmbeddings(
+        this IServiceCollection services,
+        Action<OpenAiProviderOptions>? configure = null)
+    {
+        services.AddOptions<OpenAiProviderOptions>();
+        if (configure is not null)
+        {
+            services.Configure(configure);
+        }
+
+        services.AddSingleton<OpenAiEmbeddingClient>();
+        services.AddInstrumentedEmbeddingClient<OpenAiEmbeddingClient>();
+        return services;
+    }
+
     /// <summary>Registers only the raw OpenAI chat client (no SmartLLM instrumentation).</summary>
     public static IServiceCollection AddOpenAIChatClient(
         this IServiceCollection services,

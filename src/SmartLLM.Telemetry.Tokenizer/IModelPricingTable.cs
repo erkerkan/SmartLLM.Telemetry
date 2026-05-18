@@ -18,6 +18,9 @@ public sealed class ModelPricingTable : IModelPricingTable
             ["gpt-4o-mini"] = (0.15, 0.60),
             ["gpt-4"] = (30.00, 60.00),
             ["gpt-3.5-turbo"] = (0.50, 1.50),
+            ["text-embedding-3-small"] = (0.02, 0),
+            ["text-embedding-3-large"] = (0.13, 0),
+            ["text-embedding-ada-002"] = (0.10, 0),
             ["llama3"] = (0, 0),
             ["local-model"] = (0, 0),
             ["default"] = (1.00, 2.00)
@@ -70,6 +73,13 @@ public sealed class ModelPricingTable : IModelPricingTable
         if (lower.StartsWith("gpt-4o", StringComparison.Ordinal))
         {
             return "gpt-4o";
+        }
+
+        if (lower.Contains("embedding", StringComparison.Ordinal))
+        {
+            return lower.Contains("large", StringComparison.Ordinal)
+                ? "text-embedding-3-large"
+                : "text-embedding-3-small";
         }
 
         return model;

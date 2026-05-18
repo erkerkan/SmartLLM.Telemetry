@@ -30,4 +30,18 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddConsoleTraceExporter(this IServiceCollection services)
         => services.AddSmartLLMTracing(o => o.UseConsoleExporter = true);
+
+    /// <summary>Registers <typeparamref name="TEmbeddingClient"/> as instrumented <see cref="IEmbeddingClient"/>.</summary>
+    public static IServiceCollection AddInstrumentedEmbeddingClient<TEmbeddingClient>(this IServiceCollection services)
+        where TEmbeddingClient : class, IEmbeddingClient
+    {
+        services.AddSingleton<TEmbeddingClient>();
+        services.AddSingleton<IEmbeddingClient>(sp =>
+        {
+            var inner = sp.GetRequiredService<TEmbeddingClient>();
+            var options = sp.GetRequiredService<IOptions<SmartLLMTelemetryOptions>>();
+            return new InstrumentedEmbeddingClient(inner, options);
+        });
+        return services;
+    }
 }

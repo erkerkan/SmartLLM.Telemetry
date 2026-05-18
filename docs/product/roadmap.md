@@ -10,9 +10,9 @@ Production-grade .NET SDK for AI observability and cost control: OpenTelemetry-n
 
 | | |
 |--|--|
-| **Version** | `1.0.0` (repo; not yet tagged/published) |
-| **Stage** | Phase 1–2 baseline complete |
-| **Next steps** | Test → doc polish → git push → NuGet → announce |
+| **Version** | `1.2.0` |
+| **Stage** | Phase 2 partial (tools, embeddings, CH query pack) |
+| **Next steps** | NuGet publish → semantic cache / dashboard |
 
 ---
 
@@ -24,6 +24,7 @@ Production-grade .NET SDK for AI observability and cost control: OpenTelemetry-n
 | 0.2.0 | ClickHouse sink alpha, multi-provider |
 | 0.3.0 | PII export, OTLP, secrets hygiene |
 | **1.0.0** | Stable API, metrics, integration tests, release runbook |
+| **1.2.0** | Tool spans, embeddings API, ClickHouse query pack, `ExportZeroCostRows` |
 
 ---
 
@@ -31,8 +32,8 @@ Production-grade .NET SDK for AI observability and cost control: OpenTelemetry-n
 
 | Epic | Scope | Target |
 |------|-------|--------|
-| E5 Semantic cache | Vector similarity | 1.1+ |
-| E4 ClickHouse | Testcontainers CI, async insert tuning | 1.1+ |
+| E5 Semantic cache | Vector similarity | 1.3+ |
+| E4 ClickHouse | Testcontainers CI, async insert tuning | 1.3+ |
 
 ---
 
@@ -48,6 +49,8 @@ Production-grade .NET SDK for AI observability and cost control: OpenTelemetry-n
 
 ## Related docs
 
+- [v1.1 backlog](v1.1-backlog.md)
+- [v1.2 backlog](v1.2-backlog.md)
 - [v1.0 backlog](v1.0-backlog.md)
 - [v1.0 release runbook](../release/v1.0-release-runbook.md)
 - [CHANGELOG](../../CHANGELOG.md)

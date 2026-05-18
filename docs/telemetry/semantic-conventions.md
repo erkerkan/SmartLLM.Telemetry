@@ -7,6 +7,7 @@ SmartLLM.Telemetry follows OpenTelemetry semantic conventions where applicable a
 | Operation | Activity name |
 |-----------|---------------|
 | Chat completion | `smartllm.chat` |
+| Tool call (child) | `smartllm.tool` |
 | Embedding | `smartllm.embeddings` |
 | Streaming chunk (optional child) | `smartllm.chat.chunk` |
 
@@ -16,7 +17,7 @@ SmartLLM.Telemetry follows OpenTelemetry semantic conventions where applicable a
 |-----------|------|-------------|
 | `smartllm.provider` | string | `openai`, `azure_openai`, `ollama`, `lmstudio` |
 | `smartllm.model_name` | string | Model identifier |
-| `smartllm.operation` | string | `chat`, `embeddings` |
+| `smartllm.operation` | string | `chat`, `chat_with_tools`, `embeddings`, `tool_call` |
 | `smartllm.request_id` | string | Correlation id |
 | `smartllm.status` | string | `ok`, `error`, `cancelled` |
 
@@ -36,6 +37,10 @@ SmartLLM.Telemetry follows OpenTelemetry semantic conventions where applicable a
 | `smartllm.tenant_id` | string | Multi-tenant apps |
 | `smartllm.api_key_id` | string | Hashed key id, never raw key |
 | `smartllm.prompt_version` | string | A/B testing (Phase 4) |
+| `smartllm.tool_call_count` | int | Assistant tool calls in response |
+| `smartllm.tool_result_count` | int | Tool-role messages in request |
+| `smartllm.tool.name` | string | On `smartllm.tool` child span |
+| `smartllm.embedding.input_count` | int | Embedding batch size |
 | `gen_ai.system` | string | Align with OTel GenAI (future) |
 
 ## Events
@@ -44,6 +49,8 @@ SmartLLM.Telemetry follows OpenTelemetry semantic conventions where applicable a
 |------------|--------|
 | `smartllm.prompt` | `content` (only if CapturePrompts) |
 | `smartllm.completion` | `content` (only if CapturePrompts) |
+| `smartllm.tool_call` | `tool.name`, `tool.call_id`, `tool.arguments` (if CaptureToolArguments) |
+| `smartllm.tool_result` | `tool.call_id`, `tool.result` (if CaptureToolResults) |
 
 ## Status mapping
 

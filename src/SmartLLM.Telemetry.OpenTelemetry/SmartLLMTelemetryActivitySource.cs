@@ -13,6 +13,7 @@ public static class SmartLLMTelemetryActivitySource
     {
         public const string Chat = "smartllm.chat";
         public const string Embeddings = "smartllm.embeddings";
+        public const string Tool = "smartllm.tool";
     }
 
     public static class Tags
@@ -30,6 +31,12 @@ public static class SmartLLMTelemetryActivitySource
         public const string TenantId = "smartllm.tenant_id";
 
         public const string ApiKeyId = "smartllm.api_key_id";
+        public const string ToolCallCount = "smartllm.tool_call_count";
+        public const string ToolResultCount = "smartllm.tool_result_count";
+        public const string ToolName = "smartllm.tool_name";
+        public const string ToolCallId = "smartllm.tool_call_id";
+        public const string EmbeddingDimensions = "smartllm.embedding_dimensions";
+        public const string InputCount = "smartllm.input_count";
     }
 
     public static class StatusValues

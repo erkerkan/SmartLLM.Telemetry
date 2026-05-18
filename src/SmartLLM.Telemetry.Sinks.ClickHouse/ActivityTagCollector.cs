@@ -19,7 +19,13 @@ internal static class ActivityTagCollector
         SmartLLMTelemetryActivitySource.Tags.EstimatedCostUsd,
         SmartLLMTelemetryActivitySource.Tags.DurationMs,
         SmartLLMTelemetryActivitySource.Tags.TenantId,
-        SmartLLMTelemetryActivitySource.Tags.ApiKeyId
+        SmartLLMTelemetryActivitySource.Tags.ApiKeyId,
+        SmartLLMTelemetryActivitySource.Tags.ToolCallCount,
+        SmartLLMTelemetryActivitySource.Tags.ToolResultCount,
+        SmartLLMTelemetryActivitySource.Tags.ToolName,
+        SmartLLMTelemetryActivitySource.Tags.ToolCallId,
+        SmartLLMTelemetryActivitySource.Tags.EmbeddingDimensions,
+        SmartLLMTelemetryActivitySource.Tags.InputCount
     };
 
     public static Dictionary<string, string> Collect(Activity activity)

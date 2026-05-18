@@ -46,6 +46,11 @@ var useStreaming = string.Equals(
     "true",
     StringComparison.OrdinalIgnoreCase);
 
+var runEmbed = string.Equals(
+    Environment.GetEnvironmentVariable("SMARTLLM_EMBED"),
+    "true",
+    StringComparison.OrdinalIgnoreCase);
+
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureLogging(logging => logging.AddConsole().SetMinimumLevel(LogLevel.Debug))
     .ConfigureServices(services =>
@@ -86,10 +91,33 @@ var host = Host.CreateDefaultBuilder(args)
 
 await host.StartAsync();
 
-Console.WriteLine($"Provider: {provider} | Streaming: {useStreaming}");
+Console.WriteLine($"Provider: {provider} | Streaming: {useStreaming} | Embed: {runEmbed}");
 Console.WriteLine();
 
 var model = ResolveModel(provider);
+
+if (runEmbed)
+{
+    if (provider is not ("openai" or "lmstudio"))
+    {
+        Console.WriteLine("SMARTLLM_EMBED=true requires SMARTLLM_PROVIDER=openai (embeddings use OpenAI API).");
+        await host.StopAsync();
+        return;
+    }
+
+    var embeddingClient = host.Services.GetRequiredService<IEmbeddingClient>();
+    var embedModel = Environment.GetEnvironmentVariable("OPENAI_EMBEDDING_MODEL") ?? "text-embedding-3-small";
+    var embedResponse = await embeddingClient.EmbedAsync(new EmbeddingRequest
+    {
+        Model = embedModel,
+        Inputs = ["SmartLLM.Telemetry embedding smoke test"]
+    });
+
+    Console.WriteLine($"Embedding vectors: {embedResponse.Vectors.Count}, dimensions: {embedResponse.Dimensions}");
+    Console.WriteLine($"Embedding tokens (est.): {embedResponse.Usage?.TotalTokens}");
+}
+else
+{
 var messages = new[]
 {
     new LlmMessage { Role = "user", Content = "Hello from SmartLLM.Telemetry sample. Contact: test@example.com" }
@@ -126,6 +154,7 @@ else
     Console.WriteLine($"Response: {response.Content}");
     Console.WriteLine($"Tokens: {response.Usage?.TotalTokens}");
     Console.WriteLine($"Cost USD (estimated): {response.Usage?.EstimatedCostUsd:F6}");
+}
 }
 
 if (clickHouseEnabled)
@@ -209,6 +238,11 @@ static void RegisterProvider(IServiceCollection services, string provider)
 
                 o.UseStubWhenNoApiKey = true;
             });
+            if (string.Equals(Environment.GetEnvironmentVariable("SMARTLLM_EMBED"), "true", StringComparison.OrdinalIgnoreCase))
+            {
+                services.AddSmartLLMOpenAIEmbeddings();
+            }
+
             break;
     }
 }

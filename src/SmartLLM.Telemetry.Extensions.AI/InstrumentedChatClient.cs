@@ -160,6 +160,7 @@ public sealed class InstrumentedChatClient : IChatClient, IDisposable
         var usage = ResolveUsage(model, messages, response);
         InstrumentedLlmClient.ApplyUsageTags(activity, usage);
         activity.SetTag(SmartLLMTelemetryActivitySource.Tags.Status, SmartLLMTelemetryActivitySource.StatusValues.Ok);
+        ToolCallTelemetry.Record(activity, messages, response, _telemetryOptions);
 
         var completion = streamedCompletion ?? response.Text;
         if (_telemetryOptions.CaptureCompletions && completion is not null)

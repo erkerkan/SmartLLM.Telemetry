@@ -11,5 +11,11 @@ public sealed class SmartLLMTelemetryOptions
 
     public bool CaptureCompletions { get; set; }
 
+    /// <summary>When true, include tool argument payloads in activity events (not recommended in production).</summary>
+    public bool CaptureToolArguments { get; set; }
+
+    /// <summary>When true, include tool result payloads in activity events.</summary>
+    public bool CaptureToolResults { get; set; }
+
     public string? DefaultTenantId { get; set; }
 }

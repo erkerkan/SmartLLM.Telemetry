@@ -94,7 +94,10 @@ internal static class ClickHouseActivityMapper
         return logs;
     }
 
-    public static CostRow? MapCost(Activity activity, SmartLLMTelemetryOptions? options = null)
+    public static CostRow? MapCost(
+        Activity activity,
+        SmartLLMTelemetryOptions? options = null,
+        ClickHouseSinkOptions? sinkOptions = null)
     {
         var totalTokens = GetIntTag(activity, SmartLLMTelemetryActivitySource.Tags.TotalTokens);
         if (totalTokens is null or 0)
@@ -102,8 +105,8 @@ internal static class ClickHouseActivityMapper
             return null;
         }
 
-        var cost = GetDoubleTag(activity, SmartLLMTelemetryActivitySource.Tags.EstimatedCostUsd);
-        if (cost is null or 0)
+        var cost = GetDoubleTag(activity, SmartLLMTelemetryActivitySource.Tags.EstimatedCostUsd) ?? 0;
+        if (cost == 0 && sinkOptions?.ExportZeroCostRows != true)
         {
             return null;
         }
@@ -125,7 +128,7 @@ internal static class ClickHouseActivityMapper
             PromptTokens = promptTokens,
             CompletionTokens = completionTokens,
             TotalTokens = (uint)totalTokens.Value,
-            CostUsd = cost.Value,
+            CostUsd = cost,
             Currency = "USD"
         };
     }

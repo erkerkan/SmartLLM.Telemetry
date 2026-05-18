@@ -12,7 +12,11 @@ public static class SmartLLMTelemetryMetrics
 
     private static readonly Counter<long> Requests = Meter.CreateCounter<long>(
         "smartllm.requests",
-        description: "Number of LLM requests");
+        description: "Number of LLM or embedding requests");
+
+    private static readonly Counter<long> EmbeddingInputs = Meter.CreateCounter<long>(
+        "smartllm.embedding.inputs",
+        description: "Number of embedding input texts");
 
     private static readonly Counter<long> Tokens = Meter.CreateCounter<long>(
         "smartllm.tokens",
@@ -54,6 +58,45 @@ public static class SmartLLMTelemetryMetrics
         if (completionTokens > 0)
         {
             Tokens.Add(completionTokens, Tags(baseTags, "completion"));
+        }
+
+        if (durationMs >= 0)
+        {
+            LatencyMs.Record(durationMs, baseTags);
+        }
+
+        if (estimatedCostUsd is > 0)
+        {
+            CostUsd.Record(estimatedCostUsd.Value, baseTags);
+        }
+    }
+
+    public static void RecordEmbedding(
+        string provider,
+        string model,
+        string status,
+        int inputCount,
+        int totalTokens,
+        double durationMs,
+        double? estimatedCostUsd)
+    {
+        var baseTags = new TagList
+        {
+            { "provider", provider },
+            { "model", model },
+            { "status", status },
+            { "operation", "embeddings" }
+        };
+
+        Requests.Add(1, baseTags);
+        if (inputCount > 0)
+        {
+            EmbeddingInputs.Add(inputCount, baseTags);
+        }
+
+        if (totalTokens > 0)
+        {
+            Tokens.Add(totalTokens, Tags(baseTags, "prompt"));
         }
 
         if (durationMs >= 0)
