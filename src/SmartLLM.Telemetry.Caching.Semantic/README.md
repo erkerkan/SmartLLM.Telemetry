@@ -12,6 +12,10 @@ dotnet add package SmartLLM.Telemetry.Caching.Semantic
 
 For observability today, use [SmartLLM.Telemetry.Core](https://www.nuget.org/packages/SmartLLM.Telemetry.Core) and [SmartLLM.Telemetry.OpenTelemetry](https://www.nuget.org/packages/SmartLLM.Telemetry.OpenTelemetry).
 
+## Author
+
+**Murat Erkara** — [LinkedIn](https://www.linkedin.com/in/murat-erkara) · [GitHub](https://github.com/erkerkan)
+
 ## Documentation
 
 https://github.com/erkerkan/SmartLLM.Telemetry

@@ -14,6 +14,10 @@ services.AddSmartLLMTokenizer();
 
 Use with [SmartLLM.Telemetry.Core](https://www.nuget.org/packages/SmartLLM.Telemetry.Core) and a provider package.
 
+## Author
+
+**Murat Erkara** — [LinkedIn](https://www.linkedin.com/in/murat-erkara) · [GitHub](https://github.com/erkerkan)
+
 ## Documentation
 
 https://github.com/erkerkan/SmartLLM.Telemetry

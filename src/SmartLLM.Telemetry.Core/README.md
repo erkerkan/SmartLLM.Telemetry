@@ -16,6 +16,10 @@ dotnet add package SmartLLM.Telemetry.Core
 | OpenAI | [SmartLLM.Telemetry.Providers.OpenAI](https://www.nuget.org/packages/SmartLLM.Telemetry.Providers.OpenAI) |
 | Token/cost estimates | [SmartLLM.Telemetry.Tokenizer](https://www.nuget.org/packages/SmartLLM.Telemetry.Tokenizer) |
 
+## Author
+
+**Murat Erkara** — [LinkedIn](https://www.linkedin.com/in/murat-erkara) · [GitHub](https://github.com/erkerkan)
+
 ## Documentation
 
 https://github.com/erkerkan/SmartLLM.Telemetry

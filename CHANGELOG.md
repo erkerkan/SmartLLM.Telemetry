@@ -7,6 +7,7 @@ All notable changes to this project are documented here.
 ### Changed
 
 - NuGet package README for all published packages (`PackageReadmeFile`)
+- Package metadata: author **Murat Erkara** (NuGet `Authors`, LICENSE, repo and package READMEs)
 
 ## [1.2.0] - 2026-05-18
 

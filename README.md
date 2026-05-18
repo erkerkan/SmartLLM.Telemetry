@@ -321,6 +321,13 @@ Prefer `AddSmartLLMTracing()` (see sample) for console and/or OTLP plus metrics.
 - .NET 8.0 SDK or later
 - Optional: ClickHouse 24.x+ for sink validation ([local Docker compose](docker/clickhouse/README.md))
 
+## Author
+
+**Murat Erkara**
+
+- GitHub: [@erkerkan](https://github.com/erkerkan)
+- LinkedIn: [linkedin.com/in/murat-erkara](https://www.linkedin.com/in/murat-erkara)
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

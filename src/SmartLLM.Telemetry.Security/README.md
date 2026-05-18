@@ -14,6 +14,10 @@ services.AddSmartLLMSecurity();
 
 Register before or with your telemetry pipeline. See the main repo for ClickHouse + `IContentRedactor` integration.
 
+## Author
+
+**Murat Erkara** — [LinkedIn](https://www.linkedin.com/in/murat-erkara) · [GitHub](https://github.com/erkerkan)
+
 ## Documentation
 
 https://github.com/erkerkan/SmartLLM.Telemetry

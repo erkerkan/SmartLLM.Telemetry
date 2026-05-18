@@ -4,10 +4,10 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Authors>SmartLLM Contributors</Authors>
+    <Authors>Murat Erkara</Authors>
     <Company>SmartLLM</Company>
     <Product>SmartLLM.Telemetry</Product>
-    <Copyright>Copyright © SmartLLM Contributors</Copyright>
+    <Copyright>Copyright © Murat Erkara</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/erkerkan/SmartLLM.Telemetry</PackageProjectUrl>
     <RepositoryUrl>https://github.com/erkerkan/SmartLLM.Telemetry</RepositoryUrl>
