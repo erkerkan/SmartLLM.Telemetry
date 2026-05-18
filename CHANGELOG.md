@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## [1.2.1] - 2026-05-18
+
+### Changed
+
+- NuGet package README for all published packages (`PackageReadmeFile`)
+
 ## [1.2.0] - 2026-05-18
 
 ### Added (v1.1 scope)
