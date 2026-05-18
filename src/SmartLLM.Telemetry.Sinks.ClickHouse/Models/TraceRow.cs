@@ -32,4 +32,6 @@ public sealed class TraceRow
     public double EstimatedCostUsd { get; init; }
 
     public string TenantId { get; init; } = string.Empty;
+
+    public IReadOnlyDictionary<string, string> Attributes { get; init; } = new Dictionary<string, string>();
 }

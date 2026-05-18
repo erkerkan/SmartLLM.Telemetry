@@ -39,6 +39,11 @@ public sealed class InstrumentedLlmClient : ILlmClient
             activity?.SetTag(SmartLLMTelemetryActivitySource.Tags.TenantId, _options.DefaultTenantId);
         }
 
+        if (request.ApiKeyId is not null)
+        {
+            activity?.SetTag(SmartLLMTelemetryActivitySource.Tags.ApiKeyId, request.ApiKeyId);
+        }
+
         if (_options.CapturePrompts)
         {
             var prompt = string.Join("\n", request.Messages.Select(m => $"{m.Role}: {m.Content}"));

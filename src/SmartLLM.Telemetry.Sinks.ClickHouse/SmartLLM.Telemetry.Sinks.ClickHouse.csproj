@@ -1,4 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <InternalsVisibleTo Include="SmartLLM.Telemetry.Sinks.ClickHouse.Tests" />
+  </ItemGroup>
   <PropertyGroup>
     <RootNamespace>SmartLLM.Telemetry.Sinks.ClickHouse</RootNamespace>
     <AssemblyName>SmartLLM.Telemetry.Sinks.ClickHouse</AssemblyName>

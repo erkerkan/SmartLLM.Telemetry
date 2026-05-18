@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace SmartLLM.Telemetry.Sinks.ClickHouse;
 
@@ -15,8 +16,12 @@ public static class ServiceCollectionExtensions
             services.Configure(configure);
         }
 
+        // Single instance: exporter enqueues to the same channel the hosted service drains.
+        services.AddSingleton<ClickHouseTelemetrySink>();
         services.AddSingleton<IClickHouseTelemetrySink>(sp => sp.GetRequiredService<ClickHouseTelemetrySink>());
-        services.AddHostedService<ClickHouseTelemetrySink>();
+        services.AddSingleton<IHostedService>(sp => sp.GetRequiredService<ClickHouseTelemetrySink>());
+        services.AddSingleton<ClickHouseActivityExporter>();
+        services.AddSingleton<IHostedService, ClickHouseActivityExporterActivator>();
         return services;
     }
 }

@@ -8,8 +8,12 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartLLM.Telemetry.Core\SmartLLM.Telemetry.Core.csproj" />
+    <ProjectReference Include="..\SmartLLM.Telemetry.Extensions.AI\SmartLLM.Telemetry.Extensions.AI.csproj" />
     <ProjectReference Include="..\SmartLLM.Telemetry.OpenTelemetry\SmartLLM.Telemetry.OpenTelemetry.csproj" />
+    <PackageReference Include="Microsoft.Extensions.AI.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 </Project>

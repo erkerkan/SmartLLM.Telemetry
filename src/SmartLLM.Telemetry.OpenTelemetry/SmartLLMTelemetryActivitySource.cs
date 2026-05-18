@@ -28,6 +28,8 @@ public static class SmartLLMTelemetryActivitySource
         public const string EstimatedCostUsd = "smartllm.estimated_cost_usd";
         public const string DurationMs = "smartllm.duration_ms";
         public const string TenantId = "smartllm.tenant_id";
+
+        public const string ApiKeyId = "smartllm.api_key_id";
     }
 
     public static class StatusValues

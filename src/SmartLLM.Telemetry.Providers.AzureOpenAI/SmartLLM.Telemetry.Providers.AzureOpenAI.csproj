@@ -2,12 +2,19 @@
   <PropertyGroup>
     <RootNamespace>SmartLLM.Telemetry.Providers.AzureOpenAI</RootNamespace>
     <AssemblyName>SmartLLM.Telemetry.Providers.AzureOpenAI</AssemblyName>
-    <Description>Azure OpenAI provider adapter for SmartLLM.Telemetry (Phase 1 stub).</Description>
+    <Description>Azure OpenAI provider adapter and instrumentation for SmartLLM.Telemetry.</Description>
     <PackageId>SmartLLM.Telemetry.Providers.AzureOpenAI</PackageId>
     <PackageTags>llm;azure;openai;telemetry</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartLLM.Telemetry.Core\SmartLLM.Telemetry.Core.csproj" />
+    <ProjectReference Include="..\SmartLLM.Telemetry.Extensions.AI\SmartLLM.Telemetry.Extensions.AI.csproj" />
+    <ProjectReference Include="..\SmartLLM.Telemetry.OpenTelemetry\SmartLLM.Telemetry.OpenTelemetry.csproj" />
+    <PackageReference Include="Azure.AI.OpenAI" />
+    <PackageReference Include="Microsoft.Extensions.AI.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 </Project>

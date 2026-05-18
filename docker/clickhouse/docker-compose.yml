@@ -1,0 +1,31 @@
+# Local ClickHouse for SmartLLM.Telemetry development and manual testing.
+# Use named volumes (not Windows host bind mounts) so MergeTree inserts work on Docker Desktop.
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse-server
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-default}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-}
+    ports:
+      - "8123:8123" # HTTP (DBeaver, sample sink)
+      - "9900:9000" # Native protocol
+    volumes:
+      - ch_data:/var/lib/clickhouse
+      - ch_logs:/var/log/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "localhost:8123/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  ch_data:
+  ch_logs:

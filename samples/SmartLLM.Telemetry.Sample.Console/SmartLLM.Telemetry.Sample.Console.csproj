@@ -9,7 +9,11 @@
     <ProjectReference Include="..\..\src\SmartLLM.Telemetry.OpenTelemetry\SmartLLM.Telemetry.OpenTelemetry.csproj" />
     <ProjectReference Include="..\..\src\SmartLLM.Telemetry.Tokenizer\SmartLLM.Telemetry.Tokenizer.csproj" />
     <ProjectReference Include="..\..\src\SmartLLM.Telemetry.Providers.OpenAI\SmartLLM.Telemetry.Providers.OpenAI.csproj" />
+    <ProjectReference Include="..\..\src\SmartLLM.Telemetry.Providers.AzureOpenAI\SmartLLM.Telemetry.Providers.AzureOpenAI.csproj" />
+    <ProjectReference Include="..\..\src\SmartLLM.Telemetry.Providers.Ollama\SmartLLM.Telemetry.Providers.Ollama.csproj" />
     <ProjectReference Include="..\..\src\SmartLLM.Telemetry.Security\SmartLLM.Telemetry.Security.csproj" />
+    <ProjectReference Include="..\..\src\SmartLLM.Telemetry.Sinks.ClickHouse\SmartLLM.Telemetry.Sinks.ClickHouse.csproj" />
+    <PackageReference Include="Microsoft.Extensions.AI.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
   </ItemGroup>

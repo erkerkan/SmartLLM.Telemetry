@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using SmartLLM.Telemetry.Core;
 
@@ -28,6 +30,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddConsoleTraceExporter(this IServiceCollection services)
     {
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<ResourceBuilder>, SmartLLMResourceConfiguration>());
         services.AddOpenTelemetry()
             .WithTracing(builder =>
             {

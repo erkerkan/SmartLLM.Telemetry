@@ -14,7 +14,7 @@ SmartLLM.Telemetry follows OpenTelemetry semantic conventions where applicable a
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
-| `smartllm.provider` | string | `openai`, `azure_openai`, `ollama` |
+| `smartllm.provider` | string | `openai`, `azure_openai`, `ollama`, `lmstudio` |
 | `smartllm.model_name` | string | Model identifier |
 | `smartllm.operation` | string | `chat`, `embeddings` |
 | `smartllm.request_id` | string | Correlation id |
@@ -53,9 +53,14 @@ SmartLLM.Telemetry follows OpenTelemetry semantic conventions where applicable a
 
 ## Provider behavior matrix (reference)
 
-| Capability | OpenAI | Azure OpenAI | Ollama |
-|------------|--------|--------------|--------|
-| Streaming | Yes | Yes | Yes |
-| Tool calling | Yes | Yes | Varies |
-| Token usage in response | Yes | Yes | Often no |
-| Offline token fallback | Yes | Yes | Yes |
+| Capability | OpenAI | Azure OpenAI | Ollama | LM Studio |
+|------------|--------|--------------|--------|-----------|
+| Real HTTP client | Yes | Yes | Yes | Yes (OpenAI-compatible) |
+| Stub when unavailable | Key missing | Creds missing | Serve down | No |
+| Streaming (`IChatClient`) | Yes | Yes | Yes | Yes |
+| `ILlmClient` | Yes | Yes | Yes | Yes |
+| Tool calling | Yes | Yes | Varies | Varies |
+| Token usage in response | Yes | Yes | Often no | Often no |
+| Offline token fallback | Yes | Yes | Yes | Yes |
+| Cost in ClickHouse `costs` | When priced | When priced | Usually no | Usually no |
+| ClickHouse export PII redact | With `AddSmartLLMSecurity()` | Same | Same | Same |

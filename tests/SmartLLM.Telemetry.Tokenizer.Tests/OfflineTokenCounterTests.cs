@@ -14,6 +14,13 @@ public class OfflineTokenCounterTests
     }
 
     [Fact]
+    public void ResolvePricingKey_maps_local_llama_models_to_zero_cost_bucket()
+    {
+        Assert.Equal("llama3", ModelPricingTable.ResolvePricingKey("meta-llama-3-8b-instruct"));
+        Assert.Equal(0, ModelPricingTable.Default.EstimateCostUsd("meta-llama-3-8b-instruct", 100, 100));
+    }
+
+    [Fact]
     public void EstimateUsage_calculates_cost()
     {
         var counter = new OfflineTokenCounter();

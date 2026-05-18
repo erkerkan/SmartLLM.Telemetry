@@ -1,65 +1,65 @@
 # Product Roadmap
 
+**Last updated:** 2026-05-18
+
 ## Vision
 
 Deliver a production-grade .NET SDK for AI observability and cost control: OpenTelemetry-native, high-throughput, and safe by default (PII-aware).
 
-## Phase 1 — Foundation (MVP)
+## Current position
 
-| Epic | Scope | Status |
-|------|-------|--------|
-| E1 Semantic Kernel & M.E.AI integration | Interceptor pipeline for all M.E.AI providers | In progress |
-| E2 OpenTelemetry instrumentation | ActivitySource spans, semantic tags | In progress |
-| E3 Token counting engine | Offline tokenizer + approximate cost | In progress |
+| | |
+|--|--|
+| **Stage** | Phase 2 started (ClickHouse alpha + security export) |
+| **Version** | `0.3.0` |
+| **Proven E2E** | Multi-provider sample → OTel → ClickHouse; OTLP exporter available |
+| **Next** | NuGet publish, integration tests, semantic cache (Phase 2) |
 
-### Sprint 001 stories
+---
 
-1. `SmartLLM.Telemetry.Core` + `ILlmClient` abstraction
-2. OpenAI provider activity + tags (`model_name`, `total_tokens`, latency, status)
-3. ClickHouse schema + client integration skeleton
-4. Console exporter E2E validation
+## Phase 1 — Foundation (MVP) — **Complete**
+
+| Epic | Status |
+|------|--------|
+| E1 M.E.AI integration | Done |
+| E2 OpenTelemetry instrumentation | Done |
+| E3 Token counting engine | Done |
+
+---
 
 ## Phase 2 — High Performance Storage
 
-| Epic | Scope |
-|------|-------|
-| E4 ClickHouse sink | Async batching, low-allocation writes |
-| E5 Semantic cache | Vector similarity + ClickHouse vector search |
-| E6 PII masking & security | Regex/AI redaction interceptors |
+| Epic | Scope | Status |
+|------|-------|--------|
+| E4 ClickHouse sink | Batching, retry, traces/logs/costs | **Alpha done** |
+| E5 Semantic cache | Vector similarity | Not started |
+| E6 PII masking & security | Regex + export redaction | **v0.3 baseline done** |
 
-## Phase 3 — Intelligence & Analytics
+### Providers
 
-| Epic | Scope |
-|------|-------|
-| E7 Failure clustering | Semantic grouping of errors / hallucinations |
-| E8 Cost & quota management | Department/API-key budgets, hard/soft limits |
-| E9 Advanced dashboard | Token heatmaps, model comparison, prompt diffs |
+OpenAI, Azure OpenAI, Ollama, LM Studio — all with sample + docs.
 
-## Phase 4 — Reliability & Advanced Routing
+---
 
-| Epic | Scope |
-|------|-------|
-| E10 Provider fallback | Resilience policies, load balancing |
-| E11 Prompt A/B testing | Side-by-side evaluation framework |
+## Phase 3–4
 
-## Cross-cutting backlog (added)
+Unchanged — see previous epics E7–E11 in version control history.
 
-| Item | Rationale |
-|------|-----------|
-| API stability policy | Clear v0 → v1 breaking change rules |
-| Provider behavior matrix | Streaming, tools, retry, cancellation |
-| Data classification levels | Never-log / mask / hash fields |
-| Performance SLOs | Allocation budget, p95 overhead, batch SLA |
-| Observability minimum set | Required trace + metric + log fields |
-| Cache security | Key design, TTL, embedding drift |
-| ClickHouse ops model | Partitioning, TTL, migrations |
-| Budget policy layer | Hard/soft limits, burst, tenant isolation |
+---
 
 ## Versioning milestones
 
-| Milestone | Target |
+| Milestone | Status |
 |-----------|--------|
-| `0.1.0` | Core + OTel + Console sample |
-| `0.2.0` | ClickHouse sink (alpha) |
-| `0.3.0` | PII security package |
-| `1.0.0` | Stable public API, provider matrix complete |
+| `0.1.0` | Done |
+| `0.2.0` | Done (CHANGELOG) |
+| `0.3.0` | **Done in repo** — tag/NuGet optional |
+| `1.0.0` | Future |
+
+---
+
+## Related docs
+
+- [v0.3 backlog](v0.3-backlog.md)
+- [CHANGELOG](../../CHANGELOG.md)
+- [API stability](../release/api-stability.md)

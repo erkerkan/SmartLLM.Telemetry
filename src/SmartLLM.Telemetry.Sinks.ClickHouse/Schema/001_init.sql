@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS smartllm_telemetry.traces
     total_tokens UInt32,
     estimated_cost_usd Float64,
     tenant_id String DEFAULT '',
-    attributes Map(String, String)
+    attributes Map(String, String) DEFAULT map()
 )
 ENGINE = MergeTree()
 PARTITION BY toYYYYMM(event_time)
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS smartllm_telemetry.logs
     trace_id String,
     severity LowCardinality(String),
     message String,
-    attributes Map(String, String)
+    attributes Map(String, String) DEFAULT map()
 )
 ENGINE = MergeTree()
 PARTITION BY toYYYYMM(event_time)

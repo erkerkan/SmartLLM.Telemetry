@@ -12,4 +12,13 @@ public sealed class ClickHouseSinkOptions
     public int BatchSize { get; set; } = 500;
 
     public TimeSpan FlushInterval { get; set; } = TimeSpan.FromSeconds(1);
+
+    /// <summary>Maximum insert attempts per batch (including the first try).</summary>
+    /// <summary>When true and <see cref="Core.IContentRedactor"/> is registered, redact log messages and custom attributes.</summary>
+    public bool RedactExportedContent { get; set; } = true;
+
+    public int MaxRetryAttempts { get; set; } = 3;
+
+    /// <summary>Initial delay before the first retry.</summary>
+    public TimeSpan InitialRetryDelay { get; set; } = TimeSpan.FromMilliseconds(200);
 }

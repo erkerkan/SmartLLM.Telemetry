@@ -19,17 +19,59 @@ public sealed class ModelPricingTable : IModelPricingTable
             ["gpt-4"] = (30.00, 60.00),
             ["gpt-3.5-turbo"] = (0.50, 1.50),
             ["llama3"] = (0, 0),
+            ["local-model"] = (0, 0),
             ["default"] = (1.00, 2.00)
+        };
+
+    private static readonly Dictionary<string, string> Aliases =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["gpt-35-turbo"] = "gpt-3.5-turbo",
+            ["gpt-35-turbo-16k"] = "gpt-3.5-turbo"
         };
 
     public double EstimateCostUsd(string model, int promptTokens, int completionTokens)
     {
-        if (!_prices.TryGetValue(model, out var price))
+        var key = ResolvePricingKey(model);
+        if (!_prices.TryGetValue(key, out var price))
         {
             price = _prices["default"];
         }
 
         return (promptTokens * price.InputPerMillion / 1_000_000d)
             + (completionTokens * price.OutputPerMillion / 1_000_000d);
+    }
+
+    public static string ResolvePricingKey(string model)
+    {
+        if (string.IsNullOrWhiteSpace(model))
+        {
+            return "default";
+        }
+
+        if (Aliases.TryGetValue(model, out var alias))
+        {
+            return alias;
+        }
+
+        var lower = model.ToLowerInvariant();
+        if (lower.Contains("llama", StringComparison.Ordinal)
+            || lower.StartsWith("local", StringComparison.Ordinal)
+            || lower.Contains("ollama", StringComparison.Ordinal))
+        {
+            return "llama3";
+        }
+
+        if (lower.StartsWith("gpt-4o-mini", StringComparison.Ordinal))
+        {
+            return "gpt-4o-mini";
+        }
+
+        if (lower.StartsWith("gpt-4o", StringComparison.Ordinal))
+        {
+            return "gpt-4o";
+        }
+
+        return model;
     }
 }

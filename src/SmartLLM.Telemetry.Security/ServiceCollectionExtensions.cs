@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
         }
 
         services.AddSingleton<PiiRedactor>();
+        services.AddSingleton<Core.IContentRedactor, PiiContentRedactor>();
         services.AddLlmInterceptor<PiiRedactionInterceptor>();
         return services;
     }

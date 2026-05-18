@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>SmartLLM.Telemetry.Extensions.AI</RootNamespace>
+    <AssemblyName>SmartLLM.Telemetry.Extensions.AI</AssemblyName>
+    <Description>Microsoft.Extensions.AI instrumentation for SmartLLM.Telemetry.</Description>
+    <PackageId>SmartLLM.Telemetry.Extensions.AI</PackageId>
+    <PackageTags>llm;microsoft.extensions.ai;telemetry;opentelemetry</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartLLM.Telemetry.Core\SmartLLM.Telemetry.Core.csproj" />
+    <ProjectReference Include="..\SmartLLM.Telemetry.OpenTelemetry\SmartLLM.Telemetry.OpenTelemetry.csproj" />
+    <ProjectReference Include="..\SmartLLM.Telemetry.Tokenizer\SmartLLM.Telemetry.Tokenizer.csproj" />
+    <PackageReference Include="Microsoft.Extensions.AI.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

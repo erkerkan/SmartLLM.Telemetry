@@ -11,6 +11,7 @@ TestResults/
 
 ## IDE
 .idea/
+.cursor/
 *.DotSettings.user
 
 ## OS
@@ -20,3 +21,5 @@ Thumbs.db
 ## Local config
 appsettings.*.local.json
 secrets.json
+.env
+docker/clickhouse/.env
