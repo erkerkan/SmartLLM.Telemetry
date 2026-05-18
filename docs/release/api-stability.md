@@ -1,25 +1,39 @@
-# API stability (pre-1.0)
+# API stability
 
-| Version range | Policy |
-|---------------|--------|
-| `0.x` | Breaking changes allowed in minor releases; documented in `CHANGELOG.md` |
-| `1.0+` | SemVer: breaking changes only in major; `[Obsolete]` one minor before removal |
+## v1.0.0+
 
-## Stable enough for production pilots
+| Policy | Detail |
+|--------|--------|
+| SemVer | Breaking changes only in major versions |
+| Deprecation | `[Obsolete]` for at least one minor before removal |
+| Tags | `smartllm.*` attribute names are stable |
 
-- `ILlmClient`, `SmartLLMTelemetryOptions`, Activity tag names (`smartllm.*`)
-- `AddSmartLLMTelemetry`, `AddInstrumentedLlmClient`, provider `AddSmartLLM*` extensions
-- ClickHouse sink public options and schema `001_init.sql`
+## Stable public surface
 
-## May change without a major bump before 1.0
+- `ILlmClient`, `LlmRequest`, `LlmResponse`, `LlmUsage`
+- `SmartLLMTelemetryOptions`, `AddSmartLLMTelemetry`
+- `AddInstrumentedLlmClient`, `AddSmartLLMTracing`, `AddSmartLLMOtlpExporter`, `AddConsoleTraceExporter`
+- Provider extensions: `AddSmartLLMOpenAI`, `AddSmartLLMAzureOpenAI`, `AddSmartLLMOllama`
+- `InstrumentedChatClient` via `AddInstrumentedChatClient`
+- `IContentRedactor`, `AddSmartLLMSecurity`
+- ClickHouse: `AddSmartLLMClickHouseSink`, `ClickHouseSinkOptions`, schema `001_init.sql`
+- Metrics: `SmartLLMTelemetryMetrics` meter name and instrument names
 
-- ClickHouse row shapes and batch internals
-- Stub provider defaults
-- Pricing table entries and model alias resolution
-- Optional interceptors and export redaction hooks
+## May change in minor releases
 
-## Recommendations for adopters
+- Default stub behavior when providers are unreachable
+- `ModelPricingTable` entries and alias rules
+- ClickHouse batch sizing and retry defaults
+- Internal mapper types
 
-1. Pin exact package version in `Directory.Packages.props` or `PackageReference`.
-2. Keep `CapturePrompts=false` in production unless you operate a compliant log pipeline.
-3. Do not rely on undocumented `internal` APIs.
+## Not part of the stable contract
+
+- `internal` types in sink and provider factories
+- Semantic cache package (Phase 2 placeholder)
+
+## Production recommendations
+
+1. Pin `1.0.x` package versions centrally.
+2. Keep `CapturePrompts=false` unless you have a compliant log pipeline.
+3. Register `AddSmartLLMSecurity()` when using ClickHouse with prompt capture.
+4. Use OTLP in production; reserve console export for local dev.

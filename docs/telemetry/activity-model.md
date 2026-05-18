@@ -43,13 +43,13 @@ sequenceDiagram
 3. On success: apply token tags from `LlmUsage`.
 4. On failure: record exception, set `smartllm.status=error`.
 
-## Metrics (planned)
+## Metrics (v1.0)
 
 | Metric | Type |
 |--------|------|
-| `smartllm.tokens.total` | Counter |
-| `smartllm.cost.usd` | Histogram |
 | `smartllm.requests` | Counter |
-| `smartllm.latency` | Histogram |
+| `smartllm.tokens` | Counter (`token_type=prompt\|completion`) |
+| `smartllm.latency.ms` | Histogram |
+| `smartllm.cost.usd` | Histogram |
 
-Phase 1 MVP focuses on traces; metrics exported in `0.2.0`.
+Enable via `AddSmartLLMTracing(o => o.EnableMetrics = true)`.

@@ -2,6 +2,26 @@
 
 All notable changes to this project are documented here.
 
+## [1.0.0] - 2026-05-18
+
+### Added
+
+- `AddSmartLLMTracing()` — unified console and/or OTLP trace + metric export
+- OpenTelemetry metrics: `smartllm.requests`, `smartllm.tokens`, `smartllm.latency.ms`, `smartllm.cost.usd`
+- ClickHouse batch writer HTTP integration test
+- ClickHouse schema migration guide
+- v1.0 release runbook and LinkedIn announcement draft
+
+### Changed
+
+- `ClickHouseActivityExporter` enqueues asynchronously (no sync blocking on activity stop)
+- `ActivitySource` version `1.0.0`
+- Package version line `1.0.0` — stable public API per `docs/release/api-stability.md`
+
+### Fixed
+
+- OpenTelemetry packages at 1.15.3 (OTLP security advisory)
+
 ## [0.3.0] - 2026-05-18
 
 ### Added

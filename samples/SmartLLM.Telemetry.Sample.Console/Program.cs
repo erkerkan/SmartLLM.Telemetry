@@ -60,15 +60,15 @@ var host = Host.CreateDefaultBuilder(args)
         });
         services.AddSmartLLMTokenizer();
         services.AddSmartLLMSecurity();
-        if (useOtlp)
+        services.AddSmartLLMTracing(o =>
         {
-            services.AddSmartLLMOtlpExporter();
-            Console.WriteLine("OTLP trace exporter enabled (OTEL_EXPORTER_OTLP_ENDPOINT).");
-        }
-        else
-        {
-            services.AddConsoleTraceExporter();
-        }
+            o.UseConsoleExporter = !useOtlp;
+            o.UseOtlpExporter = useOtlp;
+            o.EnableMetrics = true;
+        });
+        Console.WriteLine(useOtlp
+            ? "Tracing: OTLP (OTEL_EXPORTER_OTLP_ENDPOINT) + metrics"
+            : "Tracing: console + metrics");
 
         RegisterProvider(services, provider);
 

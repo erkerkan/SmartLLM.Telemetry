@@ -10,7 +10,25 @@ High-performance, OpenTelemetry-native observability and cost management SDK for
 - **ClickHouse sink** — Batched traces, logs, and costs with retry, attribute export, and Docker compose for local dev.
 - **OpenAI / M.E.AI** — Real `IChatClient` wiring via `Microsoft.Extensions.AI.OpenAI` plus instrumented `ILlmClient`.
 - **Security** — PII redaction before export.
-- **Semantic cache** — Vector similarity cache (Phase 2).
+- **OTLP & metrics** — `AddSmartLLMTracing()` for Collector/Grafana (v1.0).
+- **Semantic cache** — Vector similarity cache (Phase 2 / not in 1.0).
+
+## Capability matrix (v1.0)
+
+| Capability | Status |
+|------------|--------|
+| Chat `ILlmClient` + `IChatClient` tracing | Yes |
+| Streaming | Yes |
+| OpenAI / Azure / Ollama / LM Studio | Yes |
+| ClickHouse `traces` / `logs` / `costs` | Yes |
+| PII redaction on ClickHouse export | Yes (with `AddSmartLLMSecurity`) |
+| OTLP + console export | Yes |
+| OTel metrics (`smartllm.*`) | Yes |
+| Tool/function spans | No |
+| Embeddings API | No |
+| Semantic cache | Placeholder only |
+| Budget / quota enforcement | No |
+| Built-in dashboard | No |
 
 ## Package matrix
 
@@ -238,7 +256,7 @@ $env:OTEL_EXPORTER_OTLP_ENDPOINT = "http://localhost:4317"
 dotnet run --project samples/SmartLLM.Telemetry.Sample.Console -c Release
 ```
 
-Use `AddSmartLLMOtlpExporter()` in your app instead of `AddConsoleTraceExporter()` when exporting to Grafana, Jaeger, etc.
+Prefer `AddSmartLLMTracing()` (see sample) for console and/or OTLP plus metrics.
 
 ### Troubleshooting
 
@@ -252,10 +270,13 @@ Use `AddSmartLLMOtlpExporter()` in your app instead of `AddConsoleTraceExporter(
 
 ## Documentation
 
-- [Product roadmap](docs/product/roadmap.md) — current phase & milestone status
-- [v0.3 priorities & remaining work](docs/product/v0.3-backlog.md)
+- [Product roadmap](docs/product/roadmap.md)
+- [v1.0 release runbook](docs/release/v1.0-release-runbook.md) — test before push/NuGet
+- [v1.0 scope](docs/product/v1.0-backlog.md)
+- [LinkedIn draft](docs/release/announcement-linkedin.md)
 - [CHANGELOG](CHANGELOG.md)
-- [API stability (pre-1.0)](docs/release/api-stability.md)
+- [API stability](docs/release/api-stability.md)
+- [ClickHouse migrations](docs/storage/clickhouse-migrations.md)
 - [System design](docs/architecture/system-design.md)
 - [Package boundaries](docs/architecture/package-boundaries.md)
 - [Semantic conventions](docs/telemetry/semantic-conventions.md)

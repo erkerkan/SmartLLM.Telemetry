@@ -7,7 +7,7 @@ public static class SmartLLMTelemetryActivitySource
 {
     public const string Name = "SmartLLM.Telemetry";
 
-    public static readonly ActivitySource Instance = new(Name, "0.1.0");
+    public static readonly ActivitySource Instance = new(Name, "1.0.0");
 
     public static class Operations
     {

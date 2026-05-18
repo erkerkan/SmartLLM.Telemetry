@@ -4,62 +4,50 @@
 
 ## Vision
 
-Deliver a production-grade .NET SDK for AI observability and cost control: OpenTelemetry-native, high-throughput, and safe by default (PII-aware).
+Production-grade .NET SDK for AI observability and cost control: OpenTelemetry-native, high-throughput, safe by default.
 
 ## Current position
 
 | | |
 |--|--|
-| **Stage** | Phase 2 started (ClickHouse alpha + security export) |
-| **Version** | `0.3.0` |
-| **Proven E2E** | Multi-provider sample → OTel → ClickHouse; OTLP exporter available |
-| **Next** | NuGet publish, integration tests, semantic cache (Phase 2) |
+| **Version** | `1.0.0` (repo; not yet tagged/published) |
+| **Stage** | Phase 1–2 baseline complete |
+| **Next steps** | Test → doc polish → git push → NuGet → announce |
 
 ---
 
-## Phase 1 — Foundation (MVP) — **Complete**
+## Completed milestones
 
-| Epic | Status |
-|------|--------|
-| E1 M.E.AI integration | Done |
-| E2 OpenTelemetry instrumentation | Done |
-| E3 Token counting engine | Done |
+| Version | Scope |
+|---------|--------|
+| 0.1.0 | Core, OTel traces, console sample |
+| 0.2.0 | ClickHouse sink alpha, multi-provider |
+| 0.3.0 | PII export, OTLP, secrets hygiene |
+| **1.0.0** | Stable API, metrics, integration tests, release runbook |
 
 ---
 
-## Phase 2 — High Performance Storage
+## Phase 2 (post–1.0)
 
-| Epic | Scope | Status |
+| Epic | Scope | Target |
 |------|-------|--------|
-| E4 ClickHouse sink | Batching, retry, traces/logs/costs | **Alpha done** |
-| E5 Semantic cache | Vector similarity | Not started |
-| E6 PII masking & security | Regex + export redaction | **v0.3 baseline done** |
-
-### Providers
-
-OpenAI, Azure OpenAI, Ollama, LM Studio — all with sample + docs.
+| E5 Semantic cache | Vector similarity | 1.1+ |
+| E4 ClickHouse | Testcontainers CI, async insert tuning | 1.1+ |
 
 ---
 
-## Phase 3–4
+## Phase 3–4 (unchanged)
 
-Unchanged — see previous epics E7–E11 in version control history.
-
----
-
-## Versioning milestones
-
-| Milestone | Status |
-|-----------|--------|
-| `0.1.0` | Done |
-| `0.2.0` | Done (CHANGELOG) |
-| `0.3.0` | **Done in repo** — tag/NuGet optional |
-| `1.0.0` | Future |
+- E7 Failure clustering
+- E8 Cost & quota management
+- E9 Dashboard
+- E10 Provider fallback
+- E11 Prompt A/B testing
 
 ---
 
 ## Related docs
 
-- [v0.3 backlog](v0.3-backlog.md)
+- [v1.0 backlog](v1.0-backlog.md)
+- [v1.0 release runbook](../release/v1.0-release-runbook.md)
 - [CHANGELOG](../../CHANGELOG.md)
-- [API stability](../release/api-stability.md)

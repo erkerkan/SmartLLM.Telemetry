@@ -64,6 +64,7 @@ public sealed class InstrumentedLlmClient : ILlmClient
             activity?.SetTag(SmartLLMTelemetryActivitySource.Tags.DurationMs, stopwatch.Elapsed.TotalMilliseconds);
             activity?.SetTag(SmartLLMTelemetryActivitySource.Tags.Status, SmartLLMTelemetryActivitySource.StatusValues.Ok);
             activity?.SetStatus(ActivityStatusCode.Ok);
+            RecordMetrics(_inner.Provider, request.Model, SmartLLMTelemetryActivitySource.StatusValues.Ok, response.Usage, stopwatch.Elapsed.TotalMilliseconds);
 
             if (_options.CaptureCompletions)
             {
@@ -81,6 +82,7 @@ public sealed class InstrumentedLlmClient : ILlmClient
             activity?.SetTag(SmartLLMTelemetryActivitySource.Tags.Status, SmartLLMTelemetryActivitySource.StatusValues.Cancelled);
             activity?.SetTag(SmartLLMTelemetryActivitySource.Tags.DurationMs, stopwatch.Elapsed.TotalMilliseconds);
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+            RecordMetrics(_inner.Provider, request.Model, SmartLLMTelemetryActivitySource.StatusValues.Cancelled, null, stopwatch.Elapsed.TotalMilliseconds);
             throw;
         }
         catch (Exception ex)
@@ -90,8 +92,26 @@ public sealed class InstrumentedLlmClient : ILlmClient
             activity?.SetTag(SmartLLMTelemetryActivitySource.Tags.DurationMs, stopwatch.Elapsed.TotalMilliseconds);
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
             activity?.AddException(ex);
+            RecordMetrics(_inner.Provider, request.Model, SmartLLMTelemetryActivitySource.StatusValues.Error, null, stopwatch.Elapsed.TotalMilliseconds);
             throw;
         }
+    }
+
+    private static void RecordMetrics(
+        string provider,
+        string model,
+        string status,
+        LlmUsage? usage,
+        double durationMs)
+    {
+        SmartLLMTelemetryMetrics.RecordChatCompletion(
+            provider,
+            model,
+            status,
+            usage?.PromptTokens ?? 0,
+            usage?.CompletionTokens ?? 0,
+            durationMs,
+            usage?.EstimatedCostUsd);
     }
 
     public static void ApplyUsageTags(Activity? activity, LlmUsage? usage)

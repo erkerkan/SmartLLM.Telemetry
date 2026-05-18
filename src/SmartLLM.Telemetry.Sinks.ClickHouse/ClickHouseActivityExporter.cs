@@ -44,20 +44,25 @@ public sealed class ClickHouseActivityExporter : IDisposable
             return;
         }
 
+        _ = ExportActivityAsync(activity);
+    }
+
+    private async Task ExportActivityAsync(Activity activity)
+    {
         try
         {
             var trace = ClickHouseActivityMapper.MapTrace(activity, _options, _contentRedactor);
-            _sink.EnqueueTraceAsync(trace).AsTask().GetAwaiter().GetResult();
+            await _sink.EnqueueTraceAsync(trace).ConfigureAwait(false);
 
             foreach (var log in ClickHouseActivityMapper.MapLogs(activity, _contentRedactor))
             {
-                _sink.EnqueueLogAsync(log).AsTask().GetAwaiter().GetResult();
+                await _sink.EnqueueLogAsync(log).ConfigureAwait(false);
             }
 
             var cost = ClickHouseActivityMapper.MapCost(activity, _options);
             if (cost is not null)
             {
-                _sink.EnqueueCostAsync(cost).AsTask().GetAwaiter().GetResult();
+                await _sink.EnqueueCostAsync(cost).ConfigureAwait(false);
             }
 
             _logger?.LogDebug(

@@ -40,6 +40,7 @@ public sealed class InstrumentedChatClient : IChatClient, IDisposable
             var response = await _inner.GetResponseAsync(messageList, options, cancellationToken).ConfigureAwait(false);
             EnrichActivity(activity, model, messageList, response);
             activity?.SetStatus(ActivityStatusCode.Ok);
+            RecordMetrics(activity, model);
             return response;
         }
         catch (OperationCanceledException ex)
@@ -79,6 +80,7 @@ public sealed class InstrumentedChatClient : IChatClient, IDisposable
         activity?.SetTag(SmartLLMTelemetryActivitySource.Tags.DurationMs, stopwatch.Elapsed.TotalMilliseconds);
         activity?.SetTag(SmartLLMTelemetryActivitySource.Tags.Status, SmartLLMTelemetryActivitySource.StatusValues.Ok);
         activity?.SetStatus(ActivityStatusCode.Ok);
+        RecordMetrics(activity, model, stopwatch.Elapsed.TotalMilliseconds);
     }
 
     private static void AppendStreamingText(StringBuilder builder, ChatResponseUpdate update)
@@ -227,4 +229,48 @@ public sealed class InstrumentedChatClient : IChatClient, IDisposable
 
     private string ResolveProviderName()
         => _inner.GetService<ChatClientMetadata>()?.ProviderName ?? "extensions.ai";
+
+    private void RecordMetrics(Activity? activity, string model, double? durationMs = null)
+    {
+        if (activity is null)
+        {
+            return;
+        }
+
+        var status = activity.GetTagItem(SmartLLMTelemetryActivitySource.Tags.Status)?.ToString()
+            ?? SmartLLMTelemetryActivitySource.StatusValues.Ok;
+        var provider = activity.GetTagItem(SmartLLMTelemetryActivitySource.Tags.Provider)?.ToString()
+            ?? ResolveProviderName();
+        var prompt = ReadIntTag(activity, SmartLLMTelemetryActivitySource.Tags.PromptTokens);
+        var completion = ReadIntTag(activity, SmartLLMTelemetryActivitySource.Tags.CompletionTokens);
+        var duration = durationMs
+            ?? ReadDoubleTag(activity, SmartLLMTelemetryActivitySource.Tags.DurationMs)
+            ?? 0;
+        var cost = ReadDoubleTag(activity, SmartLLMTelemetryActivitySource.Tags.EstimatedCostUsd);
+
+        SmartLLMTelemetryMetrics.RecordChatCompletion(
+            provider,
+            model,
+            status,
+            prompt,
+            completion,
+            duration,
+            cost);
+    }
+
+    private static int ReadIntTag(Activity activity, string key)
+        => activity.GetTagItem(key) switch
+        {
+            int i => i,
+            long l => (int)l,
+            _ => 0
+        };
+
+    private static double? ReadDoubleTag(Activity activity, string key)
+        => activity.GetTagItem(key) switch
+        {
+            double d => d,
+            float f => f,
+            _ => null
+        };
 }

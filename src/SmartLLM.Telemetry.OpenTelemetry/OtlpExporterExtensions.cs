@@ -16,26 +16,10 @@ public static class OtlpExporterExtensions
     public static IServiceCollection AddSmartLLMOtlpExporter(
         this IServiceCollection services,
         Action<OtlpExporterOptions>? configure = null)
-    {
-        services.TryAddEnumerable(
-            ServiceDescriptor.Singleton<
-                Microsoft.Extensions.Options.IConfigureOptions<global::OpenTelemetry.Resources.ResourceBuilder>,
-                SmartLLMResourceConfiguration>());
-
-        services.AddOpenTelemetry()
-            .WithTracing(builder =>
-            {
-                builder.AddSource(SmartLLMTelemetryActivitySource.Name);
-                if (configure is null)
-                {
-                    builder.AddOtlpExporter();
-                }
-                else
-                {
-                    builder.AddOtlpExporter(configure);
-                }
-            });
-
-        return services;
-    }
+        => services.AddSmartLLMTracing(o =>
+        {
+            o.UseConsoleExporter = false;
+            o.UseOtlpExporter = true;
+            o.ConfigureOtlp = configure;
+        });
 }

@@ -29,14 +29,5 @@ public static class ServiceCollectionExtensions
     }
 
     public static IServiceCollection AddConsoleTraceExporter(this IServiceCollection services)
-    {
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<ResourceBuilder>, SmartLLMResourceConfiguration>());
-        services.AddOpenTelemetry()
-            .WithTracing(builder =>
-            {
-                builder.AddSource(SmartLLMTelemetryActivitySource.Name);
-                builder.AddConsoleExporter();
-            });
-        return services;
-    }
+        => services.AddSmartLLMTracing(o => o.UseConsoleExporter = true);
 }
